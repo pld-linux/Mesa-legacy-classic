@@ -24,14 +24,14 @@
 Summary:	Free OpenGL implementation
 Summary(pl.UTF-8):	Wolnodostępna implementacja standardu OpenGL
 Name:		Mesa-legacy-classic
-Version:	21.3.7
-Release:	3
+Version:	21.3.9
+Release:	1
 License:	MIT (core) and others - see license.html file
 Group:		X11/Libraries
 #Source0:	ftp://ftp.freedesktop.org/pub/mesa/mesa-%{version}.tar.xz
 ## Source0-md5:	7c61a801311fb8d2f7b3cceb7b5cf308
 Source0:	https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-%{version}/mesa-mesa-%{version}.tar.bz2
-# Source0-md5:	2a9dbccda11a6b07fe2b110c71fc8bd8
+# Source0-md5:	627bdfbc3a58fa4b004f2bb49228ebee
 URL:		https://www.mesa3d.org/
 %{?with_gallium_zink:BuildRequires:	Vulkan-Loader-devel}
 BuildRequires:	bison > 2.3
