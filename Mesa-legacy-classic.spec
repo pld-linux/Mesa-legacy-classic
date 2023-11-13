@@ -1,4 +1,3 @@
-# TODO: is separate libGLX_mesa needed for classic DRI versions, or >=22.x is still compatible?
 #
 # Conditional build:
 %bcond_with	sse2		# SSE2 instructions
@@ -28,8 +27,6 @@ Version:	21.3.9
 Release:	1
 License:	MIT (core) and others - see license.html file
 Group:		X11/Libraries
-#Source0:	ftp://ftp.freedesktop.org/pub/mesa/mesa-%{version}.tar.xz
-## Source0-md5:	7c61a801311fb8d2f7b3cceb7b5cf308
 Source0:	https://gitlab.freedesktop.org/mesa/mesa/-/archive/mesa-%{version}/mesa-mesa-%{version}.tar.bz2
 # Source0-md5:	627bdfbc3a58fa4b004f2bb49228ebee
 URL:		https://www.mesa3d.org/
@@ -72,7 +69,7 @@ BuildRequires:	zstd-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 #  _glapi_tls_Dispatch is defined in libglapi, but it's some kind of symbol ldd -r doesn't notice(?)
-%define		skip_post_check_so	libGL.so.1.* libGLX_mesa.so.0.*
+%define		skip_post_check_so	libGL.so.1.* libGLX_amber.so.0.*
 
 %description
 Mesa is a 3-D graphics library with an API which is very similar to
@@ -89,9 +86,9 @@ autoryzacją Silicon Graphics, Inc. Jednak autor nie posiada licencji
 OpenGL od SGI i nie twierdzi, że Mesa jest kompatybilnym zamiennikiem
 OpenGL ani powiązana z SGI.
 
-%package libGL
-Summary:	Free Mesa3D implementation of libGL OpenGL library
-Summary(pl.UTF-8):	Wolnodostępna implementacja Mesa3D biblioteki libGL ze standardu OpenGL
+%package -n Mesa-amber-libGL
+Summary:	Free Mesa3D Amber implementation of libGL OpenGL library
+Summary(pl.UTF-8):	Wolnodostępna implementacja Mesa3D Amber biblioteki libGL ze standardu OpenGL
 License:	MIT
 Group:		X11/Libraries
 Requires:	%{name}-libglapi = %{version}-%{release}
@@ -106,7 +103,7 @@ Obsoletes:	Mesa-dri-core < 10.0.0
 Obsoletes:	X11-OpenGL-libGL < 1:7.0.0
 Obsoletes:	XFree86-OpenGL-libGL < 1:7.0.0
 
-%description libGL
+%description -n Mesa-amber-libGL
 Mesa is a 3-D graphics library with an API which is very similar to
 that of OpenGL(R). To the extent that Mesa utilizes the OpenGL command
 syntax or state machine, it is being used with authorization from
@@ -117,7 +114,7 @@ compatible replacement for OpenGL or associated with SGI.
 This package contains libGL which implements OpenGL 4.6 and GLX 1.4
 specifications. It uses DRI for rendering.
 
-%description libGL -l pl.UTF-8
+%description -n Mesa-amber-libGL -l pl.UTF-8
 Mesa jest biblioteką grafiki 3D z API bardzo podobnym do OpenGL(R). Do
 tego stopnia, że Mesa używa składni i automatu OpenGL jest używana z
 autoryzacją Silicon Graphics, Inc. Jednak autor nie posiada licencji
@@ -127,75 +124,12 @@ OpenGL ani powiązana z SGI.
 Ten pakiet zawiera libGL implementującą specyfikacje OpenGL 4.6 oraz
 GLX 1.4. Używa DRI do renderowania.
 
-%package libGL-devel
-Summary:	Header files for Mesa3D libGL library
-Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki libGL z projektu Mesa3D
-License:	MIT
-Group:		X11/Development/Libraries
-Requires:	libglvnd-libGL-devel >= %{libglvnd_ver}
-Suggests:	OpenGL-doc-man
-Obsoletes:	Mesa-devel < 6.4-2
-Obsoletes:	Mesa-libGL-static < 18.3
-Obsoletes:	Mesa-static < 6.4-2
-Obsoletes:	X11-OpenGL-devel < 1:7.0.0
-Obsoletes:	X11-OpenGL-devel-base < 1:7.0.0
-Obsoletes:	X11-OpenGL-static < 1:7.0.0
-Obsoletes:	XFree86-OpenGL-devel < 1:7.0.0
-Obsoletes:	XFree86-OpenGL-devel-base < 1:7.0.0
-Obsoletes:	XFree86-OpenGL-static < 1:7.0.0
-
-%description libGL-devel
-Header files for Mesa3D libGL library.
-
-%description libGL-devel -l pl.UTF-8
-Pliki nagłówkowe biblioteki libGL z projektu Mesa3D.
-
-%package libglapi
-Summary:	Mesa GL API shared library
-Summary(pl.UTF-8):	Biblioteka współdzielona Mesa GL API
-Group:		Libraries
-Conflicts:	Mesa-libEGL < 8.0.1-2
-
-%description libglapi
-Mesa GL API shared library, common for various APIs (EGL, GL, GLES).
-
-%description libglapi -l pl.UTF-8
-Biblioteka współdzielona Mesa GL API, wspólna dla różnych API (EGL,
-GL, GLES).
-
-%package khrplatform-devel
-Summary:	Khronos platform header file
-Summary(pl.UTF-8):	Plik nagłówkowy platformy Khronos
-Group:		Development/Libraries
-Provides:	khrplatform-devel
-Conflicts:	Mesa-libEGL-devel < 8.0.1-2
-
-%description khrplatform-devel
-Khronos platform header file.
-
-%description khrplatform-devel -l pl.UTF-8
-Plik nagłówkowy platformy Khronos.
-
-%package dri-devel
-Summary:	Direct Rendering Infrastructure interface header file
-Summary(pl.UTF-8):	Plik nagłówkowy interfejsu DRI (Direct Rendering Infrastructure)
-Group:		Development/Libraries
-Requires:	libdrm-devel >= %{libdrm_ver}
-# <GL/gl.h>
-Requires:	libglvnd-libGL-devel >= %{libglvnd_ver}
-Conflicts:	Mesa-libGL-devel < 21.1.0-2
-
-%description dri-devel
-Direct Rendering Infrastructure interface header file.
-
-%description dri-devel -l pl.UTF-8
-Plik nagłówkowy interfejsu DRI (Direct Rendering Infrastructure).
-
 %package -n Mesa-dri-driver-ati-radeon-R100
 Summary:	X.org DRI driver for ATI R100 card family
 Summary(pl.UTF-8):	Sterownik X.org DRI dla rodziny kart ATI R100
 License:	MIT
 Group:		X11/Libraries
+Requires:	Mesa-amber-libGL = %{version}-%{release}
 Requires:	zlib >= %{zlib_ver}
 Suggests:	xorg-driver-video-amdgpu
 Suggests:	xorg-driver-video-ati
@@ -216,6 +150,7 @@ Summary:	X.org DRI driver for ATI R200 card family
 Summary(pl.UTF-8):	Sterownik X.org DRI dla rodziny kart ATI R200
 License:	MIT
 Group:		X11/Libraries
+Requires:	Mesa-amber-libGL = %{version}-%{release}
 Requires:	zlib >= %{zlib_ver}
 Suggests:	xorg-driver-video-amdgpu
 Suggests:	xorg-driver-video-ati
@@ -236,6 +171,7 @@ Summary:	X.org DRI driver for Intel i915 card family
 Summary(pl.UTF-8):	Sterownik X.org DRI dla rodziny kart Intel i915
 License:	MIT
 Group:		X11/Libraries
+Requires:	Mesa-amber-libGL = %{version}-%{release}
 Requires:	zlib >= %{zlib_ver}
 Obsoletes:	Mesa-dri-driver-intel-i830 < 6.5
 Obsoletes:	X11-driver-i810-dri < 1:7.0.0
@@ -255,6 +191,7 @@ Summary:	X.org DRI driver for Intel i965 card family
 Summary(pl.UTF-8):	Sterownik X.org DRI dla rodziny kart Intel i965
 License:	MIT
 Group:		X11/Libraries
+Requires:	Mesa-amber-libGL = %{version}-%{release}
 Requires:	zlib >= %{zlib_ver}
 Obsoletes:	Mesa-dri-driver-intel-i830 < 6.5
 Obsoletes:	X11-driver-i810-dri < 1:7.0.0
@@ -282,6 +219,7 @@ Summary:	X.org DRI driver for NVIDIA card family
 Summary(pl.UTF-8):	Sterownik X.org DRI dla rodziny kart NVIDIA
 License:	MIT
 Group:		X11/Libraries
+Requires:	Mesa-amber-libGL = %{version}-%{release}
 Requires:	zlib >= %{zlib_ver}
 Suggests:	xorg-driver-video-nouveau
 Conflicts:	xorg-xserver-libglx(glapi) > %{glapi_ver}
@@ -306,7 +244,7 @@ i965 i915 \
 dri_drivers=$(echo $dri_drivers | xargs | tr ' ' ',')
 
 %meson build \
-	-Dplatforms=x11 \
+	-Damber=true \
 	-Ddri3=enabled \
 	-Ddri-drivers=${dri_drivers} \
 	-Ddri-drivers-path=%{_libdir}/xorg/modules/dri \
@@ -318,6 +256,7 @@ dri_drivers=$(echo $dri_drivers | xargs | tr ' ' ',')
 	-Dglvnd=true \
 	-Dlibunwind=enabled \
 	-Dosmesa=false \
+	-Dplatforms=x11 \
 	-Dselinux=true \
 	-Dsse2=%{__true_false sse2} \
 	-Dvulkan-drivers=
@@ -333,45 +272,26 @@ rm -rf $RPM_BUILD_ROOT
 
 # not used externally
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libglapi.so
+# common with default Mesa
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libglapi.so.*
+%{__rm} $RPM_BUILD_ROOT%{_includedir}/GL/internal/dri_interface.h
+%{__rm} $RPM_BUILD_ROOT%{_pkgconfigdir}/dri.pc
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/drirc.d/00-mesa-defaults.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	libGL -p /sbin/ldconfig
-%postun	libGL -p /sbin/ldconfig
-
-%post	libglapi -p /sbin/ldconfig
-%postun	libglapi -p /sbin/ldconfig
+%post	-n Mesa-amber-libGL -p /sbin/ldconfig
+%postun	-n Mesa-amber-libGL -p /sbin/ldconfig
 
 ### libraries
 
-%if 0
-# see TODO question
-%files libGL
+%files -n Mesa-amber-libGL
 %defattr(644,root,root,755)
 %doc docs/{*.rst,README.UVD,features.txt,relnotes/*.rst}
-%attr(755,root,root) %{_libdir}/libGLX_mesa.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/libGLX_mesa.so.0
-%attr(755,root,root) %{_libdir}/libGLX_mesa.so
-%{_datadir}/drirc.d
-
-%files libGL-devel
-%defattr(644,root,root,755)
-%doc docs/_extra/specs/*
-
-%files libglapi
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libglapi.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/libglapi.so.0
-# libglapi-devel? nothing seems to need it atm.
-#%attr(755,root,root) %{_libdir}/libglapi.so
-
-%files dri-devel
-%defattr(644,root,root,755)
-%dir %{_includedir}/GL/internal
-%{_includedir}/GL/internal/dri_interface.h
-%{_pkgconfigdir}/dri.pc
-%endif
+%attr(755,root,root) %{_libdir}/libGLX_amber.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/libGLX_amber.so.0
+%attr(755,root,root) %{_libdir}/libGLX_amber.so
 
 ### drivers: dri
 
