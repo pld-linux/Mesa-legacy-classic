@@ -243,7 +243,7 @@ i965 i915 \
 
 dri_drivers=$(echo $dri_drivers | xargs | tr ' ' ',')
 
-%meson build \
+%meson \
 	-Damber=true \
 	-Ddri3=enabled \
 	-Ddri-drivers=${dri_drivers} \
@@ -261,14 +261,14 @@ dri_drivers=$(echo $dri_drivers | xargs | tr ' ' ',')
 	-Dsse2=%{__true_false sse2} \
 	-Dvulkan-drivers=
 
-%ninja_build -C build
+%meson_build
 
 %{?with_tests:%ninja_test -C build}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%ninja_install -C build
+%meson_install
 
 # not used externally
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libglapi.so
