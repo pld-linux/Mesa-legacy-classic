@@ -53,7 +53,7 @@ BuildRequires:	pkgconfig(xcb-present) >= 1.13
 BuildRequires:	pkgconfig(xcb-randr) >= 1.12
 BuildRequires:	python3 >= 1:3.2
 BuildRequires:	python3-Mako >= 0.8.0
-BuildRequires:	rpmbuild(macros) >= 2.007
+BuildRequires:	rpmbuild(macros) >= 2.042
 BuildRequires:	sed >= 4.0
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXext-devel >= 1.0.5
@@ -263,7 +263,7 @@ dri_drivers=$(echo $dri_drivers | xargs | tr ' ' ',')
 
 %meson_build
 
-%{?with_tests:%ninja_test -C build}
+%{?with_tests:%meson_test}
 
 %install
 rm -rf $RPM_BUILD_ROOT
